@@ -6,4 +6,9 @@
     <string name="profil">Profil</string>
     <string name="tutup">Tutup</string>
     <string name="logout">Logout</string>
+    <string name="tambah_buku">Tambah buku</string>
+    <string name="judul">Judul buku</string>
+    <string name="author">Author</string>
+    <string name="batal">batal</string>
+    <string name="simpan">Simpan</string>
 </resources>
