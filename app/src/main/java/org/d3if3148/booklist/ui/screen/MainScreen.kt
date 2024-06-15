@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -221,8 +222,11 @@ fun ScreenContent(viewModel: MainViewModel, userId:String, modifier: Modifier) {
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(bottom = 80.dp)
             ) {
-                items(data){
-                    ListItem(book = it)
+                items(data){ book ->
+                    ListItem(book = book, onDelete = {bookId ->
+                        Log.d("ScreenContent", "Deleting hewan with ID: $bookId")
+                        viewModel.deleteData(userId, bookId)
+                    } )
                 }
             }
         }
@@ -246,7 +250,17 @@ fun ScreenContent(viewModel: MainViewModel, userId:String, modifier: Modifier) {
 }
 
 @Composable
-fun ListItem(book: Book) {
+fun ListItem(book: Book, onDelete: (String) -> Unit) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    DisplayAlertDialog(
+        openDialog = showDialog,
+        onDismissRequest = { showDialog = false },
+        onConfirmation = {
+            onDelete(book.id)
+            showDialog = false
+        }
+    )
     Box(
         modifier = Modifier
             .padding(4.dp)
@@ -265,24 +279,28 @@ fun ListItem(book: Book) {
                 .fillMaxWidth()
                 .padding(4.dp)
         )
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(4.dp)
                 .background(Color(red = 0f, green = 0f, blue = 0f, alpha = 0.5f))
-                .padding(4.dp)
+                .padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = book.judul,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Text(
-                text = book.author,
-                fontStyle = FontStyle.Italic,
-                fontSize = 14.sp,
-                color = Color.White
-            )
+            Column {
+                Text(
+                    text = book.judul,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    text = book.author,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 14.sp,
+                    color = Color.White
+                )
+            }
         }
     }
 }
